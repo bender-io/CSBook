@@ -5,8 +5,8 @@ import UIKit
 // raywenderlich.com/586-swift-algorithm-club-heap-and-priority-queue-data-structure
 
 // Two Heap Models:
-// maxheaps: Elements with a higher value represent higher priority.
-// minheaps: Elements with a lower value represent higher priority.
+// • maxheaps: Elements with a higher value represent higher priority.
+// • minheaps: Elements with a lower value represent higher priority.
 
 // Before a new level can be added, all the existing levels must be full. Whenever we add nodes to a heap, we add them in the leftmost possible position in the incomplete level. Whenever we remove nodes from a heap, we remove the rightmost node from the lowest level.
 
@@ -19,9 +19,9 @@ import UIKit
 // Note: This array isn’t sorted. As you may have noticed from the above diagrams, the only relationships between nodes that the heap cares about are that parents have a higher priority than their children. The heap doesn’t care which of the left child and right child have higher priority. A node which is closer to the root node isn’t always of higher priority than a node which is further away.
 
 // "Magic Formulas" - Uses Integer Division, so fractions round down
-// Left Child: (2 * currentIndex) + 1
-// Right Child: (2 * currentIndex) + 2
-// Parent Node: (currentIndex - 1) / 2
+// • Left Child: (2 * currentIndex) + 1
+// • Right Child: (2 * currentIndex) + 2
+// • Parent Node: (currentIndex - 1) / 2
 
 struct Heap<Element> {
     
@@ -76,6 +76,26 @@ struct Heap<Element> {
     func highestPriorityIndex(for parent: Int) -> Int {
         return highestPriorityIndex(of: highestPriorityIndex(
             of: parent, and: leftChildIndex(of: parent)), and: rightChildIndex(of: parent))
+    }
+    
+    /// Swaps the firstIndex with the secondIndex
+    mutating func swapElement(at firstIndex: Int, with secondIndex: Int) {
+        guard firstIndex != secondIndex else { return }
+        elements.swapAt(firstIndex, secondIndex)
+    }
+    
+    /// Performs heap sift to re-order indices based on highest priority
+    mutating func siftUp(elementAtIndex index: Int) {
+        let parent = parentIndex(of: index)
+        guard !isRoot(index), isHigherPriority(at: index, than: parent) else { return }
+        swapElement(at: index, with: parent)
+        siftUp(elementAtIndex: parent)
+    }
+    
+    /// Appends (enqueue's) an element
+    mutating func enqueue(_ element: Element) {
+        elements.append(element)
+        siftUp(elementAtIndex: count - 1)
     }
 }
 
