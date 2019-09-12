@@ -1,6 +1,6 @@
 //: [Previous](@previous)
 
-import UIKit
+import Foundation
 
 // MARK: - Binary Search Tree - O(log n)
 var sortedArray = [2, 4, 5, 6, 7, 9, 10, 13, 14, 16, 22, 25]

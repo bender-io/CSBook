@@ -1,6 +1,8 @@
 //: [Previous](@previous)
 
-import UIKit
+import Foundation
+
+// MARK: - Heaps
 
 // raywenderlich.com/586-swift-algorithm-club-heap-and-priority-queue-data-structure
 

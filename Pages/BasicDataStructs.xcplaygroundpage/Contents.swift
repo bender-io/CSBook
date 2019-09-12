@@ -1,6 +1,10 @@
 //: [Previous](@previous)
 
+import Foundation
+
 /*
+
+ // MARK: - BUILT IN DATA STRUCTURES (SWIFT)
  
  ARRAY: General Purpose, Generic Collection (ie: container for generics)
  • Ordered

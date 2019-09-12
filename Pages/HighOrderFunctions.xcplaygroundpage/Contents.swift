@@ -1,8 +1,8 @@
 //: [Previous](@previous)
 
-import UIKit
+import Foundation
 
-// MARK: - ARRAY METHODS
+// MARK: - HIGH ORDER METHODS - ARRAY
 struct Device {
     var type: String
     var price: Float
@@ -57,7 +57,7 @@ devices.removeAll(where: { $0.color == nil })
 devices
 
 
-// MARK: - CHARACTER & STRING METHODS
+// MARK: - HIGH ORDER FUNCTIONS - STRINGS
 let sampleString = "-email: brian@brianhersh.dev phone: 303.875.5731-"
 
 // TRIM
