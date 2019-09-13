@@ -28,6 +28,16 @@ import Foundation
  • Inserts are always O(1)
  • Lookup operations are always O(1)
  
+ 
+ // MARK: - COLLECTION PROTOCOLS
+ 
+ • Tier 1, Sequence: A sequence type provides sequential access to its elements. This axiom comes with a caveat: Using the sequential access may destructively consume the elements.
+ 
+ • Tier 2, Collection: A collection type is a sequence type that provides additional guarantees. A collection type is finite and allows for repeated nondestructive sequential access.
+ 
+ • Tier 3, BidirectionalColllection: A collection type can be a bidirectional collection type if it, as the name suggests, can allow for bidirectional travel up and down the sequence. This isn’t possible for the linked list, since you can only go from the head to the tail, but not the other way around.
+ 
+ • Tier 4, RandomAccessCollection: A bidirectional collection type can be a random access collection type if it can guarantee that accessing an element at a particular index will take just as long as access an element at any other index. This is not possible for the linked list, since accessing a node near the front of the list is substantially quicker than one that is further down the list.
 */
 
 
