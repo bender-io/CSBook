@@ -213,6 +213,8 @@ extension LinkedList: Collection {
     }
 }
 
+// MARK: - EXAMPLES
+
 var list = LinkedList<Int>()
 
 // Push (ie: head-first insertion) -> O(1)
@@ -268,6 +270,119 @@ var cowList = newList
 // Multiple reference counts to newList
 print("Is uniquely referenced: \(isKnownUniquelyReferenced(&newList.head))")
 cowList.append(100)
-print("\nTesting for copy-on-write:\nnewList: \(cowList)\noldList:\(newList)")
+print("\nTesting for copy-on-write:\ncowList: \(cowList)\noldList:\(newList)\n")
+
+
+// MARK: - CHALLENGES
+
+// Challenge 1: Create a function that prints out the elements of a linked list in reverse order
+// Given a linked list, print the nodes in reverse order. For example:
+// 1 -> 2 -> 3 -> nil
+// should print:
+// 3
+// 2
+// 1
+
+func reverse(_ list: LinkedList<Int>) -> LinkedList<Int> {
+    var reverseList = LinkedList<Int>()
+    for n in list {
+        reverseList.push(n)
+    }
+    return reverseList
+}
+print("Challenge₁:")
+print(reverse(newList))
+
+
+// Challenge 2: Create a function that returns the middle node of a linked list
+// Given a linked list, find the middle node of the list. For example:
+// “1 -> 2 -> 3 -> 4 -> nil
+// middle is 3
+//1 -> 2 -> 3 -> nil
+// middle is 2”
+
+func findMiddleNode(in list: LinkedList<Int>) -> Int? {
+    var count = 0
+    for _ in list {
+        count += 1
+    }
+    let middleIndex = (count / 2)
+    var spliceIndex = Array(list.prefix(middleIndex))
+    let middleNode = spliceIndex.popLast()
+    
+    return middleNode
+}
+print("\nChallenge₂:")
+print("Linked List: \(list)\nMiddleNode: \(String(describing: findMiddleNode(in: list)))")
+
+// Challenge 3: Create a function that reverses a linked list
+// To reverse a list is to manipulate the nodes so that the nodes of the list are linked in the other direction. For example:
+// before
+// 1 -> 2 -> 3 -> nil
+//
+// after
+// 3 -> 2 -> 1 -> nil
+
+func reverse₁(_ list: LinkedList<Int>) -> LinkedList<Int> {
+    var reverseList = LinkedList<Int>()
+    for n in list {
+        reverseList.push(n)
+    }
+    return reverseList
+}
+print("\nChallenge₃")
+print(reverse₁(newList))
+
+// Challenge 4: Create a function that takes two sorted linked lists and merges them into a single sorted linked list
+// Your goal is to return a new linked list that contains the nodes from two lists in sorted order. You may assume the sort order is in ascending order. For example:
+// list1
+// 1 -> 4 -> 10 -> 11
+
+// list2
+// -1 -> 2 -> 3 -> 6
+
+// merged list
+// -1 -> 1 -> 2 -> 3 -> 4 -> 6 -> 10 -> 11
+
+// TODO: - Finish This Challenge
+func combineLists(_ list₁: LinkedList<Int>, _ list₂: LinkedList<Int>) -> LinkedList<Int> {
+    guard !list₁.isEmpty else { return list₂ }
+    guard !list₂.isEmpty else { return list₁ }
+    
+//    var currentLeft = list₁.head
+//    var currentRight = list₂.head
+    
+    return list₂
+}
+
+// Challenge 5: Create a function that removes all occurrences of a specific element from a linked list
+// Given a linked list, remove all nodes that match a particular value. The implementation is similar to the remove(at:) method that you implemented for the linked list. For example:
+// original list
+//1 -> 3 -> 3 -> 3 -> 4
+
+// list after removing all occurrences of 3
+// 1 -> 4
+
+func removeAllInstances(of element: Int, in list: LinkedList<Int>) -> LinkedList<Int> {
+    var list₂ = LinkedList<Int>()
+    
+    for n in list {
+        if n != element {
+            list₂.append(n)
+        }
+    }
+    return list₂
+}
+var listChallenge₅ = LinkedList<Int>()
+listChallenge₅.append(1)
+listChallenge₅.append(2)
+listChallenge₅.append(3)
+listChallenge₅.append(3)
+listChallenge₅.append(4)
+
+print("\nChallenge₅")
+print("Before remove all: \(listChallenge₅)")
+listChallenge₅ = removeAllInstances(of: 3, in: listChallenge₅)
+print("After remove all: \(listChallenge₅)")
 
 //: [Next](@next)

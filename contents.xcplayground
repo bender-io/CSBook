@@ -3,6 +3,7 @@
     <pages>
         <page name='BasicDataStructs'/>
         <page name='LinkedLists'/>
+        <page name='Stacks'/>
         <page name='BigO'/>
         <page name='BinarySearchTree'/>
         <page name='Heap'/>
