@@ -374,6 +374,7 @@ func removeAllInstances(of element: Int, in list: LinkedList<Int>) -> LinkedList
     return list₂
 }
 var listChallenge₅ = LinkedList<Int>()
+let removeValue = 3
 listChallenge₅.append(1)
 listChallenge₅.append(2)
 listChallenge₅.append(3)
@@ -381,8 +382,8 @@ listChallenge₅.append(3)
 listChallenge₅.append(4)
 
 print("\nChallenge₅")
-print("Before remove all: \(listChallenge₅)")
-listChallenge₅ = removeAllInstances(of: 3, in: listChallenge₅)
-print("After remove all: \(listChallenge₅)")
+print("Before remove all \(removeValue)s: \(listChallenge₅)")
+listChallenge₅ = removeAllInstances(of: removeValue, in: listChallenge₅)
+print("After remove all \(removeValue)s: \(listChallenge₅)")
 
 //: [Next](@next)
