@@ -2,6 +2,12 @@
 
 import Foundation
 
+// Helper function
+public func example(of description: String, action: () -> Void) {
+    print("---Example of: \(description)---")
+    action()
+    print()
+}
 // Queue Stacks Struct forEachLevelOrder() method
 public struct Queue<T> {
     
@@ -157,4 +163,37 @@ if let searchResult2 = tree.search("WKD Blue") {
     print("Couldn't find WKD Blue")
 }
 
+// MARK: - CHALLENGES
+// Challenge 1.
+// Print all the values in a tree in an order based on their level. Nodes belonging in the same level should be printed in the same line. For example, consider the following tree:
+
+func makeNumberTree() -> TreeNode<Int> {
+    let root = TreeNode(1)
+    let secondLevel₁ = TreeNode(2)
+    let secondLevel₂ = TreeNode(3)
+    let secondLevel₃ = TreeNode(4)
+    let thirdLevel₁ = TreeNode(5)
+    let thirdLevel₂ = TreeNode(6)
+    let thirdLevel₃ = TreeNode(7)
+    let thirdLevel₄ = TreeNode(8)
+    let thirdLevel₅ = TreeNode(9)
+    let thirdLevel₆ = TreeNode(10)
+    root.add(secondLevel₁)
+    root.add(secondLevel₂)
+    root.add(secondLevel₃)
+    secondLevel₁.add(thirdLevel₁)
+    secondLevel₁.add(thirdLevel₂)
+    secondLevel₂.add(thirdLevel₃)
+    secondLevel₂.add(thirdLevel₂)
+    secondLevel₃.add(thirdLevel₅)
+    secondLevel₃.add(thirdLevel₆)
+    
+    return root
+}
+
+
+example(of: "Challenge 1") {
+    let numberTree = makeNumberTree()
+    numberTree.forEachLevelOrder { print($0.value) }
+}
 //: [Next](@next)
