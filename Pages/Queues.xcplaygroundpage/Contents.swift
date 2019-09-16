@@ -102,6 +102,65 @@ extension DoublyLinkedList: Sequence {
     }
 }
 
+// MARK: - Ring Buffer for Queue Exercise
+public struct RingBuffer<T> {
+    
+    private var array: [T?]
+    private var readIndex = 0
+    private var writeIndex = 0
+    
+    public init(count: Int) {
+        array = Array<T?>(repeating: nil, count: count)
+    }
+    
+    public var first: T? {
+        return array[readIndex]
+    }
+    
+    public mutating func write(_ element: T) -> Bool {
+        if !isFull {
+            array[writeIndex % array.count] = element
+            writeIndex += 1
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    public mutating func read() -> T? {
+        if !isEmpty {
+            let element = array[readIndex % array.count]
+            readIndex += 1
+            return element
+        } else {
+            return nil
+        }
+    }
+    
+    private var availableSpaceForReading: Int {
+        return writeIndex - readIndex
+    }
+    
+    public var isEmpty: Bool {
+        return availableSpaceForReading == 0
+    }
+    
+    private var availableSpaceForWriting: Int {
+        return array.count - availableSpaceForReading
+    }
+    
+    public var isFull: Bool {
+        return availableSpaceForWriting == 0
+    }
+}
+extension RingBuffer: CustomStringConvertible {
+    public var description: String {
+        let values = (0..<availableSpaceForReading).map {
+            String(describing: array[($0 + readIndex) % array.count]!)
+        }
+        return "[" + values.joined(separator: ", ") + "]"
+    }
+}
 
 // MARK: - QUEUES:
 // • Queues use FIFO or first-in first-out ordering, meaning the first element that was added will always be the first to be removed. Queues are handy when you need to maintain the order of your elements to process later.
@@ -122,13 +181,26 @@ extension DoublyLinkedList: Sequence {
 // - O(n) for dequeue operations
 // • O(n) space complexity - however bulk allocation is much faster than Linked List allocation below
 
-// From DoublyLinkedList:
+// From Doubly Linked List:
 // + O(1) for enqueue & dequeue operations. Nodes don't need to shift and simply point to the next node in memory for O(1) dequeue
 // - O(n) space complexity - high memory overhead for dynamic memory allocation & each node needs additional forward and backward referenceing in memory
 // - Harder to setup (need to add DoublyLinkedList struct & Node class first)
 
-// • Using a ring buffer
-// • Using two stacks
+// From Ring Buffer:
+// A ring buffer, also known as a circular buffer, is a fixed-size array. This data structure strategically wraps around to the beginning when there are no more items to remove at the end.
+
+// From Two Stacks:
+// • Whenever you enqueue an element, it goes in the right stack.
+// • When you need to dequeue an element, you reverse the right stack and place it in the left stack so that you can retrieve the elements using FIFO order.
+// Note: Yes, reversing the contents of an array is an O(n) operation. The overall dequeue cost is still amortized O(1). Imagine having a large number of items in both the left and right stack. If you dequeue all of the elements, first it will remove all of the elements from the left stack, then reverse-copy the right stack only once, and then continue removing elements off the left stack.
+// KEY POINTS:
+// • Queue takes a FIFO strategy, an element added first must also be removed first.
+// • Enqueue inserts an element to the back of the queue.
+// • Dequeue removes the element at the front of the queue.
+// • Elements in an array are laid out in contiguous memory blocks, whereas elements in a linked list are more scattered with potential for cache misses.
+// • Ring-buffer-queue based implementation is good for queues with a fixed size.
+// • Compared to other data structures, leveraging two stacks improves the dequeue(_:) time complexity to amortized O(1) operation.
+// • Double-stack implementation beats out Linked-list in terms of spacial locality.
 
 public protocol Queue {
     /// The generic protocol type
@@ -143,6 +215,7 @@ public protocol Queue {
     var peek: Element? { get }
 }
 
+// MARK: - ARRAY
 public struct QueueArray<T>: Queue {
     private var array: [T] = []
     public init(){}
@@ -175,6 +248,7 @@ extension QueueArray: CustomStringConvertible {
     }
 }
 
+// MARK: - LINKED LIST
 public class QueueLinkedList<T>: Queue {
     private var list = DoublyLinkedList<T>()
     public init(){}
@@ -208,21 +282,130 @@ extension QueueLinkedList: CustomStringConvertible {
     }
 }
 
+// MARK: - RING BUFFER
+public struct QueueRingBuffer<T>: Queue {
+    private var ringBuffer: RingBuffer<T>
+    
+    /// Inits a ring buffer object with a fixed size
+    ///
+    /// - Parameter count: the size of the ring buffer
+    public init(count: Int) {
+        ringBuffer = RingBuffer<T>(count: count)
+    }
+    
+    /// O(1) - Checks to see if queue is empty
+    public var isEmpty: Bool {
+        return ringBuffer.isEmpty
+    }
+    
+    /// O(1) - Return the element at the front of the queue without removing it
+    public var peek: T? {
+        return ringBuffer.first
+    }
+    
+    /// O(1) - Enqueues the element and increments the write pointer by one
+    public mutating func enqueue(_ element: T) -> Bool {
+        return ringBuffer.write(element)
+    }
+    
+    /// O(1) - Checks if the queue is empty and, if so, returns nil. If not, it returns an item from the front of the buffer & increments the read pointer by one.
+    public mutating func dequeue() -> T? {
+        return isEmpty ? nil : ringBuffer.read()
+    }
+}
+
+// MARK: - DOUBLE-STACK
+public struct QueueStacks<T>: Queue {
+    /// Used to perform dequeues from the stack [newest...oldest] - removeLast for deque
+    private var leftStack: [T] = []
+    /// Used to perform enqueues from the stack [oldest...newest] - append(element) for enqueue
+    private var rightStack: [T] = []
+    public init(){}
+    
+    /// O(1) - Checks to see if both stacks are empty
+    public var isEmpty: Bool {
+        return leftStack.isEmpty && rightStack.isEmpty
+    }
+    
+    /// O(1) - Returns the element at the front of the queue without removing it
+    public var peek: T? {
+        return !leftStack.isEmpty ? leftStack.last : rightStack.first
+    }
+    
+    /// O(1) - Pushes to the stack by appending to the right stack array [oldest...newest] - append(element) for enqueue
+    public mutating func enqueue(_ element: T) -> Bool {
+        rightStack.append(element)
+        return true
+    }
+    
+    /// Amortized O(1) - Removes the last value in the left stack array [newest...oldest] - removeLast for dequeue. If the left stack is empty, first adds the elements from the right stack in reversed order - O(n) operation - and clears the right stack.
+    public mutating func dequeue() -> T? {
+        if leftStack.isEmpty {
+            leftStack = rightStack.reversed()
+            rightStack.removeAll()
+        }
+        return leftStack.popLast()
+    }
+}
+
 // EXAMPLES:
 // 1. From Array:
-var queue = QueueArray<String>()
-queue.enqueue("Brian")
-queue.enqueue("Daniel")
-queue.enqueue("Allison")
-queue.enqueue("Gabi")
-print("Starting Queue: \(queue)")
-print("Adding Dana to Enqueue")
-queue.enqueue("Dana")
-print("After Enqueue: \(queue)")
-print("Removing \(queue.dequeue()!) from queue")
-print("After Dequeue: \(queue)")
-print("Front of queue peek: \(queue.peek!)")
+var arrayQueue = QueueArray<String>()
+arrayQueue.enqueue("Brian")
+arrayQueue.enqueue("Daniel")
+arrayQueue.enqueue("Allison")
+arrayQueue.enqueue("Gabi")
+print("Array Queue:\n• Starting Queue: \(arrayQueue)")
+print("• Adding Dana to Enqueue")
+arrayQueue.enqueue("Dana")
+print("• After Enqueue: \(arrayQueue)")
+print("• Removing \(arrayQueue.dequeue()!) from queue")
+print("• After Dequeue: \(arrayQueue)")
+print("• Front of queue peek: \(arrayQueue.peek!)\n")
 
+// 2. From Doubly Linked List:
+var queueLinkedList = QueueLinkedList<String>()
+queueLinkedList.enqueue("Brian")
+queueLinkedList.enqueue("Daniel")
+queueLinkedList.enqueue("Hersh")
+print("Linked List Queue:\n• Starting Queue: \(queueLinkedList)")
+queueLinkedList.enqueue("Mike")
+print("• Adding Mike to Enqueue")
+print("• After Enqueue: \(queueLinkedList)")
+print("• Removing \(queueLinkedList.dequeue()!) from queue")
+print("• After Dequeue: \(queueLinkedList)")
+print("• Front of queue peek: \(queueLinkedList.peek!)\n")
 
+// 3. From Ring Buffer:
+var queueBuffer = QueueRingBuffer<String>(count: 4)
+queueBuffer.enqueue("Brian")
+queueBuffer.enqueue("Daniel")
+queueBuffer.enqueue("Hersh")
+print("Ring Buffer Queue:\n• Starting Queue: \(queueBuffer)")
+queueBuffer.enqueue("Mike")
+print("• Adding Mike to Enqueue")
+queueBuffer.enqueue("Brent")
+print("• Adding Brent to Enqueue -> Queue is full!")
+print("• Full Queue: \(queueBuffer)")
+print("• After Enqueue: \(queueBuffer)")
+print("• Removing \(queueBuffer.dequeue()!) from queue")
+print("• After Dequeue: \(queueBuffer)")
+print("• Front of queue peek: \(queueBuffer.peek!)\n")
+
+// 4. Double-Stack:
+var queueStacks = QueueStacks<String>()
+queueStacks.enqueue("Brian")
+queueStacks.enqueue("Daniel")
+queueStacks.enqueue("Hersh")
+print("Double Stacks Queue:\n• Starting Queue: \(queueStacks)")
+queueStacks.enqueue("Mike")
+queueStacks.enqueue("Brent")
+print("• Adding Mike & Brent to Enqueue")
+print("• O(1) Enqueue: \(queueStacks)")
+print("• Removing \(queueStacks.dequeue()!) from queue")
+print("• O(n) Dequeue: \(queueStacks)")
+print("• Removing \(queueStacks.dequeue()!) from queue")
+print("• O(1) Dequeue: \(queueStacks)")
+print("• Front of queue peek: \(queueStacks.peek!)")
 
 //: [Next](@next)
