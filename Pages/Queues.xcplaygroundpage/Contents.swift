@@ -408,4 +408,139 @@ print("• Removing \(queueStacks.dequeue()!) from queue")
 print("• O(1) Dequeue: \(queueStacks)")
 print("• Front of queue peek: \(queueStacks.peek!)")
 
+// MARK: - CHALLENGES
+// Challenge 1.
+// Explain the difference between a stack and a queue. Provide two real-life examples for each data structure.
+
+// Stacks:
+// • Use LIFO - last in, first out - operations, meaning you can only push and pop objects from the top of the stack.
+// • Example₁ - Pancakes represent stacks. You add more to the top and remove to eat from the top of the stack.
+// • Example₂ - NavigationControllers are stacks and push new ViewControllers to the top of the stack, or pop ViewControllers off the top of the stack to navigate.
+// • Example₃ - A clip of amunition represents a stack. You load and unload bullets from the top of the stack.
+
+// Queues:
+// • Use FIFO - first in, first out - operations, meaning you enqueue new objects to the back and dequeue the oldest objects from the front.
+// • Example₁ - Lines represent queues. If you arrive at a line, you enqueue to the back. When you get through the line, you dequeue out the front.
+// • Example₂ - A customer support queue represents queues, as they help (dequeue) customers in the order that they called in (enqueued)
+
+// Challenge 2.
+// Given the following queue: SWIFT
+// Provide step-by-step diagrams showing how the following series of commands affects the queue:
+// 1. enqueue("R")
+// 2. enqueue("O")
+// 3. dequeue()
+// 4. enqueue("C")
+// 5. dequeue()
+// 6. dequeue()
+// 7. enqueue("K")
+
+// Array:
+// Start: [S, W, I, F, T]
+// 1. [S, W, I, F, T, R]
+// 2. [S, W, I, F, T, R, O]
+// 3. [W, I, F, T, R, O]
+// 4. [W, I, F, T, R, O, C]
+// 5. [I, F, T, R, O, C]
+// 6. [F, T, R, O, C]
+// 7. [F, T, R, O, C, K]
+
+// LinkedList:
+// Start: S <-> W <-> I <-> F <-> T
+// 1. S <-> W <-> I <-> F <-> T <-> R
+// 2. S <-> W <-> I <-> F <-> T <-> R <-> O
+// 3. W <-> I <-> F <-> T <-> R <-> O
+// 4. W <-> I <-> F <-> T <-> R <-> O <-> C
+// 5. I <-> F <-> T <-> R <-> O <-> C
+// 6. F <-> T <-> R <-> O <-> C
+// 7. F <-> T <-> R <-> O <-> C <-> K
+
+// Ring Buffer Count(5):
+// Start: [S, W, I, F, T]
+// 1. [S, W, I, F, T]
+// 2. [S, W, I, F, T]
+// 3. [W, I, F, T, _]
+// 4. [W, I, F, T, C]
+// 5. [I, F, T, C, _]
+// 6. [F, T, C, _, _]
+// 6. [F, T, C, K, _]
+
+// Stacks:
+// Start: LeftStack[] , RightStack[S, W, I, F, T]
+// 1. LeftStack[] , RightStack[S, W, I, F, T, R]
+// 2. LeftStack[] , RightStack[S, W, I, F, T, R, O]
+// 3. LeftStack[O, R, T, F, I, W] , RightStack[]
+// 4. LeftStack[O, R, T, F, I, W] , RightStack[C]
+// 5. LeftStack[O, R, T, F, I] , RightStack[C]
+// 6. LeftStack[O, R, T, F] , RightStack[C]
+// 7. LeftStack[O, R, T, F] , RightStack[C, K]
+
+// Challenge 3.
+// Imagine that you are playing a game of Monopoly with your friends. The problem is that everyone always forget whose turn it is! Create a Monopoly organizer that always tells you whose turn it is:
+
+protocol BoardGameManager {
+    associatedtype Player
+    mutating func nextPlayer() -> Player?
+}
+
+public struct PlayerTurns<Player>: BoardGameManager {
+    /// Used to perform dequeues from the stack [newest...oldest] - removeLast for deque
+    private var leftStack: [Player] = []
+    /// Used to perform enqueues from the stack [oldest...newest] - append(element) for enqueue
+    private var rightStack: [Player] = []
+    public init(){}
+    
+    /// O(1) - Checks to see if both stacks are empty
+    public var isEmpty: Bool {
+        return leftStack.isEmpty && rightStack.isEmpty
+    }
+    
+    /// O(1) - Returns the element at the front of the queue without removing it
+    public var peek: Player? {
+        return !leftStack.isEmpty ? leftStack.last : rightStack.first
+    }
+    
+    /// O(1) - Pushes to the stack by appending to the right stack array [oldest...newest] - append(element) for enqueue
+    public mutating func enqueue(_ element: Player) -> Bool {
+        rightStack.append(element)
+        return true
+    }
+    
+    /// Amortized O(1) - Removes the last value in the left stack array [newest...oldest] - removeLast for dequeue. If the left stack is empty, first adds the elements from the right stack in reversed order - O(n) operation - and clears the right stack.
+    public mutating func dequeue() -> Player? {
+        if leftStack.isEmpty {
+            leftStack = rightStack.reversed()
+            rightStack.removeAll()
+        }
+        return leftStack.popLast()
+    }
+    
+    /// Amortized O(1) - Dequeues the most recent player from the front, then enqueues them to the back
+    public mutating func nextPlayer() -> Player? {
+        if leftStack.isEmpty {
+            leftStack = rightStack.reversed()
+            rightStack.removeAll()
+        }
+        guard let player = leftStack.popLast() else { return nil }
+        rightStack.append(player)
+        return player
+    }
+}
+
+var players = PlayerTurns<String>()
+players.enqueue("Brian")
+players.enqueue("Gabi")
+players.enqueue("Nate")
+players.enqueue("James")
+print("\nChallenge Three:\nTurn Order:\n\(players)")
+print("Round 1:\n\(players.nextPlayer()!)")
+print(players.nextPlayer()!)
+print(players.nextPlayer()!)
+print(players.nextPlayer()!)
+print("Round 2:\n\(players.nextPlayer()!)")
+print(players.nextPlayer()!)
+print(players.nextPlayer()!)
+print(players.nextPlayer()!)
+
+
+
 //: [Next](@next)
