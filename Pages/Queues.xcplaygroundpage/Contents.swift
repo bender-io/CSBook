@@ -332,13 +332,13 @@ public struct QueueStacks<T>: Queue {
         return !leftStack.isEmpty ? leftStack.last : rightStack.first
     }
     
-    /// O(1) - Pushes to the stack by appending to the right stack array [oldest...newest] - append(element) for enqueue
+    /// O(1) - Pushes to the stack by appending to the right stack array [oldest...newest] -> enqueue
     public mutating func enqueue(_ element: T) -> Bool {
         rightStack.append(element)
         return true
     }
     
-    /// Amortized O(1) - Removes the last value in the left stack array [newest...oldest] - removeLast for dequeue. If the left stack is empty, first adds the elements from the right stack in reversed order - O(n) operation - and clears the right stack.
+    /// Amortized O(1) - Removes the last value in the left stack array [newest...oldest] -> dequeue. If the left stack is empty, first adds the elements from the right stack in reversed order - O(n) operation - and clears the right stack.
     public mutating func dequeue() -> T? {
         if leftStack.isEmpty {
             leftStack = rightStack.reversed()
@@ -392,7 +392,7 @@ print("• Removing \(queueBuffer.dequeue()!) from queue")
 print("• After Dequeue: \(queueBuffer)")
 print("• Front of queue peek: \(queueBuffer.peek!)\n")
 
-// 4. Double-Stack:
+// 4. Double Stack:
 var queueStacks = QueueStacks<String>()
 queueStacks.enqueue("Brian")
 queueStacks.enqueue("Daniel")
