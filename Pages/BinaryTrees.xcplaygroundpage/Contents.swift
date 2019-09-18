@@ -30,6 +30,7 @@ public class BinaryNode<Element> {
     public var value: Element
     public var leftChild: BinaryNode?
     public var rightChild: BinaryNode?
+    private var height: Int?
     
     public init(value: Element) {
         self.value = value
@@ -60,9 +61,6 @@ extension BinaryNode {
     }
 }
 
-
-
-
 extension BinaryNode: CustomStringConvertible {
     public var description: String {
         return diagram(for: self)
@@ -81,6 +79,7 @@ extension BinaryNode: CustomStringConvertible {
     }
 }
 
+// EXAMPLES
 var tree: BinaryNode<Int> = {
     let zero = BinaryNode(value: 0)
     let one = BinaryNode(value: 1)
@@ -117,5 +116,51 @@ tree.traversePostOrder { postOrderTraversal.append($0) }
 print("In-Order Traversal: Left -> Self -> Right:\n\(inOrderTraversal)")
 print("\nPre-Ordered Traversal: Self -> Left -> Right:\n\(preOrderTraversal)")
 print("\nPost-Ordered Traversal: Left -> Right -> Self:\n\(postOrderTraversal)")
+
+// CHALLENEGES
+
+// Challenge 1.
+// • Given a binary tree, find the height of the tree. The height of the binary tree is determined by the distance between the root and the furthest leaf. The height of a binary tree with a single node is zero, since the single node is both the root and the furthest leaf
+
+// Book Answer - Seems Slow
+//func height(of node: BinaryNode<Int>?) -> Int {
+//    guard let node = node else { return -1 }
+//
+//    return 1 + max(height(of: tree.leftChild), height(of: tree.rightChild))
+//}
+//
+//print(height(of: tree))
+
+// Challenge 2.
+// • A common task in software development is serializing an object into another data type. This process is known as serialization, and allows custom types to be used in systems that only support a closed set of data types.
+// • An example of serialization is JSON. Your task is to devise a way to serialize a binary tree into an array, and a way to deserialize the array back into the same binary tree.
+// • To clarify this problem, consider the following binary tree:\
+
+// • A particular algorithm may output the serialization as [15, 10, 5, nil, nil, 12, nil, nil, 25, 17, nil, nil, nil]. The deserialization process should transform the array back into the[…]
+
+extension BinaryNode {
+    
+    public func traversePreOrderForSerialization(visit: (Element?) -> Void) {
+        visit(value)
+        if let leftChild = leftChild {
+            leftChild.traversePreOrder(visit: visit)
+        } else {
+            visit(nil)
+        }
+        if let rightChild = rightChild {
+            rightChild.traversePreOrder(visit: visit)
+        } else {
+            visit(nil)
+        }
+    }
+}
+
+func serialize<T>(_ node: BinaryNode<T>) -> [T?] {
+    var array: [T?] = []
+    node.traversePreOrderForSerialization { array.append($0) }
+    return array
+}
+
+print(serialize(tree))
 
 //: [Next](@next)
