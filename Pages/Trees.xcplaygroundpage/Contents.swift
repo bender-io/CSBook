@@ -184,7 +184,7 @@ func makeNumberTree() -> TreeNode<Int> {
     secondLevel₁.add(thirdLevel₁)
     secondLevel₁.add(thirdLevel₂)
     secondLevel₂.add(thirdLevel₃)
-    secondLevel₂.add(thirdLevel₂)
+    secondLevel₂.add(thirdLevel₄)
     secondLevel₃.add(thirdLevel₅)
     secondLevel₃.add(thirdLevel₆)
     

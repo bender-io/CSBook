@@ -6,6 +6,7 @@
         <page name='Stacks'/>
         <page name='Queues'/>
         <page name='Trees'/>
+        <page name='BinaryTrees'/>
         <page name='BigO'/>
         <page name='BinarySearchTree'/>
         <page name='Heap'/>
