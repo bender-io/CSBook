@@ -7,8 +7,8 @@
         <page name='Queues'/>
         <page name='Trees'/>
         <page name='BinaryTrees'/>
+        <page name='BinarySearchTrees'/>
         <page name='BigO'/>
-        <page name='BinarySearchTree'/>
         <page name='Heap'/>
         <page name='HighOrderFunctions'/>
         <page name='Sets'/>

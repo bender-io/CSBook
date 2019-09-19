@@ -30,7 +30,6 @@ public class BinaryNode<Element> {
     public var value: Element
     public var leftChild: BinaryNode?
     public var rightChild: BinaryNode?
-    private var height: Int?
     
     public init(value: Element) {
         self.value = value
@@ -78,6 +77,13 @@ extension BinaryNode: CustomStringConvertible {
             + diagram(for: node.leftChild, bottom + "│ ", bottom + "└──", bottom + " ")
     }
 }
+
+private extension BinaryNode {
+    var min: BinaryNode {
+        return leftChild?.min ?? self
+    }
+}
+
 
 // EXAMPLES
 var tree: BinaryNode<Int> = {

@@ -17,15 +17,15 @@ var usediPad = Device(type: "iPad", price: 400.00, color: nil)
 var devices = [iMacPro, iPhone6, iPhone7, iPad, usediPad]
 
 // FILTER
-let filterByiPhone = devices.filter({ $0.type == "iPhone" })
+let filterByiPhone = devices.filter { $0.type == "iPhone" }
 filterByiPhone
 
 // MAP
-let mapByCanadianPrice = devices.map({ $0.price * 1.2 })
+let mapByCanadianPrice = devices.map { $0.price * 1.2 }
 mapByCanadianPrice
 
 // COMPACT MAP
-let compactMapByColor = devices.compactMap({ $0.color })
+let compactMapByColor = devices.compactMap { $0.color }
 compactMapByColor
 
 // REDUCE
@@ -33,27 +33,27 @@ let reduceToTotalCanadianPrice: Float = mapByCanadianPrice.reduce(0.0, +)
 reduceToTotalCanadianPrice
 
 // SORT
-devices.sort(by: { $0.price > $1.price })
+devices.sort { $0.price > $1.price }
 devices
 
 // SORTED
-let sortedByLeastExpensive = devices.sorted(by: { $0.price < $1.price })
+let sortedByLeastExpensive = devices.sorted { $0.price < $1.price }
 sortedByLeastExpensive
 
 // CONTAINS
-let containsColorYellow = devices.contains(where: { $0.color == "Yellow" })
+let containsColorYellow = devices.contains { $0.color == "Yellow" }
 containsColorYellow
 
 // MAX
-let maxPrice = devices.max(by: { $0.price < $1.price })
+let maxPrice = devices.max { $0.price < $1.price }
 maxPrice
 
 // MIN
-let minPrice = devices.min(by: { $0.price > $1.price })
+let minPrice = devices.min { $0.price > $1.price }
 minPrice
 
 // REMOVE ALL WHERE
-devices.removeAll(where: { $0.color == nil })
+devices.removeAll { $0.color == nil }
 devices
 
 
@@ -65,11 +65,11 @@ let trimmedString = sampleString.trimmingCharacters(in: .init(charactersIn: "-")
 print(trimmedString)
 
 // SPLIT
-let splitString = trimmedString.split(whereSeparator: { $0.isPunctuation || $0.isWhitespace })
+let splitString = trimmedString.split { $0.isPunctuation || $0.isWhitespace }
 print(splitString)
 
 // SORT
-let sortedString = trimmedString.sorted(by: { $0 > $1 })
+let sortedString = trimmedString.sorted { $0 > $1 }
 sortedString
 
 //: [Next](@next)
