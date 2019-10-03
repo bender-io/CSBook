@@ -8,6 +8,7 @@
         <page name='Trees'/>
         <page name='BinaryTrees'/>
         <page name='BinarySearchTrees'/>
+        <page name='AVLTrees'/>
         <page name='BigO'/>
         <page name='Heap'/>
         <page name='HighOrderFunctions'/>
